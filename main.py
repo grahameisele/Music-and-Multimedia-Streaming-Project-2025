@@ -1,4 +1,5 @@
 import argparse
+import audio
 #main program file
 
 
@@ -9,7 +10,7 @@ def parse_arguments():
     return args
 
 def main(args):
-    print(args.input)
+    audio.hello_world()
 
 if __name__ == "__main__":
     args = parse_arguments()
