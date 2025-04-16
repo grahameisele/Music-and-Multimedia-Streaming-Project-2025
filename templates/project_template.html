@@ -291,7 +291,8 @@
              * The following functions are called upon button pressure
              * You need to add the logic to call your Python APIs.
              * You can use the fetch method of js to perform an HTTP request
-             * @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+             * @see https://developer.moz
+             * illa.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
              *
              * The added filters are available in the filterList variable which is an array of objects
              * where each object has a name and an array of properties
@@ -301,9 +302,24 @@
             const uploadVideo = async () => {
                 const selectedFile = document.getElementById("uploadVideo").files[0]; // retrieves the chosen file
                 const formData = new FormData();
-                formData.append("file", file); // 'file' is the name the server will use to access the file, use the formData as the body
+                formData.append("file", selectedFile); // 'file' is the name the server will use to access the file, use the formData as the body
                 // fill me
-                console.error("Unimplemented method uploadVideo");
+                try {
+                    const response = await fetch("http://127.0.0.1/uploadvideo", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        alert("File uploaded successfully!");
+                    } else {
+                        alert("Failed to upload file.");
+                    }
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                    alert("An error occurred while uploading the file.");
+                }
+                
             };
 
             const deleteVideo = async () => {

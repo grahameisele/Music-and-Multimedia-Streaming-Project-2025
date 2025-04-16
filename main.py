@@ -12,10 +12,11 @@ def parse_arguments():
 
 # main function
 def main(args):
-    samples, sample_rate = audio.get_samples_and_sample_rate(args.input)
-    samples = audio.apply_gain_compression(samples)
-    audio.save_audio("output.wav", samples, sample_rate)
+    #samples, sample_rate = audio.get_samples_and_sample_rate(args.input)
+    #samples = audio.apply_gain_compression(samples)
+    #audio.save_audio("output.wav", samples, sample_rate)
 
+    # start the web server
     server.start_server()
 
 # to tell that it is main program
