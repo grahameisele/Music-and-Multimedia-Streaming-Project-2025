@@ -1,5 +1,6 @@
 import argparse
 import audio
+import server
 #main program file
 
 # parse arguments given by the user
@@ -15,7 +16,11 @@ def main(args):
     samples = audio.apply_gain_compression(samples)
     audio.save_audio("output.wav", samples, sample_rate)
 
+    server.start_server()
+
 # to tell that it is main program
 if __name__ == "__main__":
     args = parse_arguments()
-    main(args)
+    main(args) 
+
+
