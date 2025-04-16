@@ -4,7 +4,7 @@ import math
 
 
 # Purpose
-# reads in an audio file given an input file path
+# reads in an audio file
 
 # Params
 # path: file path of the input audio
@@ -19,36 +19,22 @@ def get_samples_and_sample_rate(path):
     
     try: 
         sample_rate, samples = wav.read(path)
-        samples = samples.astype(np.float32) 
     except:
         print("Error reading file")    
 
-    return [samples, sample_rate]
+    return samples, sample_rate
 
-# Purpose
-# adds gain compression to a given audio 
+# Purpose 
+# saves an audio file given
 
-# Params
-# samples: the array of samples of a given audio file
-# sample_rate: the sample rate of the given audio file
-# alpha: an adjustable parameter to change how much to increase distortion 
+#  Params
+#  path: the file path to name the output file
+#  samples: the samples of the audio in which to save
+#  sample_rate: the rate at which to sample the output audio
 
-def add_gain_compression(samples, alpha=1):
+def save_audio(path, samples, sample_rate):
+    samples = np.asarray(samples)
 
-    samples_min = np.min(samples)
+    print("Sample Rate: ", sample_rate)
 
-    for i, sample in enumerate(samples):
-        delta = sample - samples_min
-        try:
-            if delta > 0:
-                samples[i] = (1 + (alpha / math.log10(delta)))
-            else:
-                samples[i] = 1  # Or some default value to avoid distortion
-        except Exception as error:
-            print("current sample:", sample)
-            print("sample min:", samples_min)
-            print("delta:", delta)
-            print("An exception occurred:", error)
-    
-    return samples
-
+    wav.write(path, sample_rate, samples)
