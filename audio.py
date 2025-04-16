@@ -38,3 +38,31 @@ def save_audio(path, samples, sample_rate):
     print("Sample Rate: ", sample_rate)
 
     wav.write(path, sample_rate, samples)
+
+# Purpose 
+# to simulate and apply gain compression to a given array of samples
+
+# Params
+# samples
+# the array of samples
+
+# Returns 
+# samples with gain compression applied
+
+def apply_gain_compression(samples):
+
+    for i, sample, in enumerate(samples):
+
+        if sample > 0:
+            samples[i] = (abs(sample) + 1000 * math.sqrt(sample)) / 6.0
+
+        if sample < 0:
+            samples[i] = -1.0 * ((abs(sample) + 1000 * math.sqrt(abs(sample))) / 6.0)
+
+        if samples[i] > 32767:
+            samples[i] = 32767
+        
+        if samples[i] < -32768:
+            samples[i] = 32768
+    
+    return samples 
