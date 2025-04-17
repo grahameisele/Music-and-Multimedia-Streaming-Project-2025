@@ -2,11 +2,8 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 from werkzeug.utils import secure_filename
 import os
 
-UPLOAD_FOLDER = '/video/'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/", methods=['GET', 'POST'])
 def homepage():
@@ -50,14 +47,18 @@ def delete_video():
 
 @app.route("/configurefilters", methods=['POST'])
 def configure_filters():
+
+    global filters
+    filters = request.form
+    
     return redirect('/')
 
 @app.route("/applyfilters", methods=['POST'])
-def configure_filters():
+def applyfilters():
     return redirect('/')
 
 @app.route("/startstreaming", methods=['POST'])
-def configure_filters():
+def startstreaming():
     return redirect('/')
 
 def start_server():
