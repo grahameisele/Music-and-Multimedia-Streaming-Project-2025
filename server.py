@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
-from werkzeug.utils import secure_filename
+from flask import jsonify
+
 import os
 import video
 
@@ -15,34 +16,40 @@ def homepage():
     return render_template('project_template.html')
 
 # api call/route for uploading videos
-@app.route("/uploadvideo", methods=['POST'])
+@app.route("/uploadvideo", methods=['GET, POST'])
 def upload_video():
 
     # checks if an uploaded video file already exists
     if(len(os.listdir("static//videos"))) > 0:
-        flash('Video Already Uploaded')
-        return redirect('/')
+        return jsonify(
+            message='Video Already Uploaded',
+        )
 
     # makes sure that the user actually provided a file
     if 'file' not in request.files:
-        flash('No file part in the request')
-        return redirect('/')
+        return jsonify(
+            message='No file part in the request',
+        )
 
     # gets file from the request and checks that it has a name
     file = request.files['file']
     if file.filename == '':
-        flash('No file selected')
-        return redirect('/')
+         return jsonify(
+            message='No file selected',
+        )
     
     # checks if file is mp4 file
     if (not file.filename.endswith('.mp4')):
-        flash('File Not MP4 Format')
-        return redirect('/')
+        return jsonify(
+            message='File Not MP4 Format',
+        )
     
     # saves the file to the local server folder in the statics folder
     file.save("static//videos//video.mp4")
     
-    return redirect('/')
+    return jsonify(
+            message='Video Sucessfully Uploaded',
+        )
 
 # api call/route for deleting the video on the server
 @app.route("/deletevideo", methods=['POST'])
@@ -74,32 +81,41 @@ def configure_filters():
     return redirect('/')
 
 # api call/route for applying the filters stored in the global variable
-@app.route("/applyfilters", methods=['POST'])
+@app.route("/applyfilters", methods=['GET'])
 def applyfilters():
 
     # checks that there is a video to apply the filters to
-    if(not os.path.exists("videos//video.mp4")):
-        flash('No video exists')
-        return redirect('/')
+    if(not os.path.exists("static//videos//video.mp4")):
+        return jsonify(
+        message="No video exists",
+        )
 
     # checks that 
     if(len(filters) == 0):
-        flash('No filters were configured')
-        return redirect('/')
+        return jsonify(
+        message="No filters were configured",
+        )
 
     # iterates over the list of filters and applies them
     for filter in filters:
         if('grayscale:' in filter):
             video.greyScaleVideo()
 
-    return redirect('/')
+    global filters_applied
+    filters_applied = True
+
+    return jsonify(
+        message="Filters Applied Sucessfully",
+    )
 
 # api call / route for starting to stream the video
-@app.route("/startstreaming", methods=['POST'])
+@app.route("/startstreaming", methods=['GET'])
 def startstreaming():
-
-
-    return redirect('/')
+    
+    # returns json saying wether video can procede to play
+    return jsonify(
+        canPlay=filters_applied,
+    )
 
 # Purpose
 # starts python flask web server 
