@@ -12,7 +12,7 @@ def homepage():
 @app.route("/uploadvideo", methods=['POST'])
 def upload_video():
 
-    if(len(os.listdir("video"))) > 0:
+    if(len(os.listdir("static//videos"))) > 0:
         flash('Video Already Uploaded')
         return redirect('/')
 
@@ -30,7 +30,7 @@ def upload_video():
         flash('File Not MP4 Format')
         return redirect('/')
     
-    file.save("video//video.mp4")
+    file.save("static//videos//video.mp4")
     
     print(file.filename)
     return redirect('/')
@@ -38,8 +38,8 @@ def upload_video():
 @app.route("/deletevideo", methods=['POST'])
 def delete_video():
 
-    if os.path.exists("video//video.mp4"):
-        os.remove("video//video.mp4")
+    if os.path.exists("videos//video.mp4"):
+        os.remove("static//videos//video.mp4")
         return redirect('/')
     
     flash('No file found to delete')

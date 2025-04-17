@@ -201,7 +201,7 @@
                 <div id="videoContainer" style="display: none">
                     <video controls width="640" height="360">
                         <!-- fill with the correct URL and the correct format (e.g. mp4/webm)-->
-                        <source src="YOUR_VIDEO_SOURCE" type="video/YOUR_FORMAT" />
+                        <source src="static/videos/video.mp4" type="video/mp4" />
                         Your browser does not support HTML5 video.
                     </video>
                 </div>
@@ -319,17 +319,48 @@
                     console.error("Error uploading file:", error);
                     alert("An error occurred while uploading the file.");
                 }
-                
+
             };
 
             const deleteVideo = async () => {
-                // fill me
-                console.error("Unimplemented method deleteVideo");
+               
+                try {
+                    const response = await fetch("http://127.0.0.1/deletevideo", {
+                        method: "POST",
+                    });
+
+                    if (response.ok) {
+                        alert("File deleted successfully!");
+                    } else {
+                        alert("Failed to delete file.");
+                    }
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                    alert("An error occurred while deleting the file.");
+                }
+
             };
             const configureFilters = async () => {
                 // use the variable filterList
-                // fill me
-                console.error("Unimplemented method configureFilters");
+
+                const formData = new FormData();
+                const filters = document.getElementById("filtersList"); 
+                for (const child of filters.children) 
+                {
+                    var currentFilterText = child.innerText;
+                    formData.append("filter", currentFilterText)
+                }
+
+                try {
+                    const response = await fetch("http://127.0.0.1/configurefilters", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                    alert("An error occurred while deleting the file.");
+                }
             };
             const applyFilters = async () => {
                 // fill me
@@ -337,6 +368,19 @@
             }
             const stream = async () => {
                 //fill me
+
+                //gets video and video container element
+                let videoContainer = document.getElementById("videoContainer");
+                let videoElements = document.getElementsByTagName("video");
+
+                //makes video container visible
+                videoContainer.style.display = "block";
+                videoContainer.style.width = "640px";
+                videoContainer.style.height = "360px";
+
+                // starts video
+                videoElements[0].play();
+
                 console.error("Unimplemented method stream");
             };
         </script>
