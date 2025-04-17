@@ -41,8 +41,6 @@ def upload_video():
 @app.route("/deletevideo", methods=['POST'])
 def delete_video():
 
-    print("test")
-
     if os.path.exists("video//video.mp4"):
         os.remove("video//video.mp4")
         return redirect('/')
@@ -50,6 +48,17 @@ def delete_video():
     flash('No file found to delete')
     return redirect('/')
 
+@app.route("/configurefilters", methods=['POST'])
+def configure_filters():
+    return redirect('/')
+
+@app.route("/applyfilters", methods=['POST'])
+def configure_filters():
+    return redirect('/')
+
+@app.route("/startstreaming", methods=['POST'])
+def configure_filters():
+    return redirect('/')
 
 def start_server():
     app.run("0.0.0.0", port=80, debug=True)
