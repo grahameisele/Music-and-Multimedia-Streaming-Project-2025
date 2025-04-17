@@ -1,6 +1,7 @@
 import argparse
 import audio
 import server
+import video
 #main program file
 
 # parse arguments given by the user
@@ -17,6 +18,7 @@ def main(args):
     #audio.save_audio("output.wav", samples, sample_rate)
 
     # start the web server
+    #video.greyScaleVideo()
     server.start_server()
 
 # to tell that it is main program

@@ -2,61 +2,82 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 from werkzeug.utils import secure_filename
 import os
 
-
+# creates flask instance
 app = Flask(__name__)
 
+# default home page 
 @app.route("/", methods=['GET', 'POST'])
 def homepage():
     return render_template('project_template.html')
 
+# api call/route for uploading videos
 @app.route("/uploadvideo", methods=['POST'])
 def upload_video():
 
+    # checks if an uploaded video file already exists
     if(len(os.listdir("static//videos"))) > 0:
         flash('Video Already Uploaded')
         return redirect('/')
 
+    # makes sure that the user actually provided a file
     if 'file' not in request.files:
         flash('No file part in the request')
         return redirect('/')
-    
+
+    # gets file from the request and checks that it has a name
     file = request.files['file']
-    
     if file.filename == '':
         flash('No file selected')
         return redirect('/')
     
+    # checks if file is mp4 file
     if (not file.filename.endswith('.mp4')):
         flash('File Not MP4 Format')
         return redirect('/')
     
+    # saves the file to the local server folder in the statics folder
     file.save("static//videos//video.mp4")
     
-    print(file.filename)
     return redirect('/')
 
+# api call/route for deleting the video on the server
 @app.route("/deletevideo", methods=['POST'])
 def delete_video():
 
+    # checks if the video file actually exists
     if os.path.exists("videos//video.mp4"):
+
+        # delete the file
         os.remove("static//videos//video.mp4")
         return redirect('/')
     
     flash('No file found to delete')
     return redirect('/')
 
+
 @app.route("/configurefilters", methods=['POST'])
 def configure_filters():
 
     global filters
-    filters = request.form
+    # converts filters to python dictionary
+    filters = request.form.getlist('filter')
+
+    for filter in filters:
+       print(filter)
     
     return redirect('/')
 
 @app.route("/applyfilters", methods=['POST'])
 def applyfilters():
+
+    for filter in filters:
+
+        if('grayscale:' in filter):
+            print('gray found')
+
     return redirect('/')
 
+# api call / route for starting to stream the video
 @app.route("/startstreaming", methods=['POST'])
 def startstreaming():
     return redirect('/')
