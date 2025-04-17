@@ -54,10 +54,12 @@ def delete_video():
     flash('No file found to delete')
     return redirect('/')
 
-
+# api call/route for configuring the filters into a global variable
+# that lasts while the python server is running
 @app.route("/configurefilters", methods=['POST'])
 def configure_filters():
 
+    # global word allows to be used outside of this function
     global filters
     # converts filters to python dictionary
     filters = request.form.getlist('filter')
@@ -67,6 +69,7 @@ def configure_filters():
     
     return redirect('/')
 
+# api call/route for applying the filters stored in the global variable
 @app.route("/applyfilters", methods=['POST'])
 def applyfilters():
 
