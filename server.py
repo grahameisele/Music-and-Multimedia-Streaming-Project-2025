@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
 from werkzeug.utils import secure_filename
 import os
+import video
 
 # creates flask instance
 app = Flask(__name__)
+
+filters = []
+filters_applied = False
 
 # default home page 
 @app.route("/", methods=['GET', 'POST'])
@@ -73,18 +77,32 @@ def configure_filters():
 @app.route("/applyfilters", methods=['POST'])
 def applyfilters():
 
-    for filter in filters:
+    # checks that there is a video to apply the filters to
+    if(not os.path.exists("videos//video.mp4")):
+        flash('No video exists')
+        return redirect('/')
 
+    # checks that 
+    if(len(filters) == 0):
+        flash('No filters were configured')
+        return redirect('/')
+
+    # iterates over the list of filters and applies them
+    for filter in filters:
         if('grayscale:' in filter):
-            print('gray found')
+            video.greyScaleVideo()
 
     return redirect('/')
 
 # api call / route for starting to stream the video
 @app.route("/startstreaming", methods=['POST'])
 def startstreaming():
+
+
     return redirect('/')
 
+# Purpose
+# starts python flask web server 
 def start_server():
     app.run("0.0.0.0", port=80, debug=True)
 
