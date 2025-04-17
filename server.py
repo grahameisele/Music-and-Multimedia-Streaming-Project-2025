@@ -6,6 +6,8 @@ import video
 
 # creates flask instance
 app = Flask(__name__)
+app.secret_key = 'lWXE02osxb'
+
 
 filters = []
 filters_applied = False
@@ -52,34 +54,31 @@ def upload_video():
         )
 
 # api call/route for deleting the video on the server
-@app.route("/deletevideo", methods=['POST'])
+@app.route("/deletevideo", methods=['GET'])
 def delete_video():
 
     # checks if the video file actually exists
-    if os.path.exists("videos//video.mp4"):
+    if os.path.exists("static//videos//video.mp4"):
+        print("video exists")
 
         # delete the file
         os.remove("static//videos//video.mp4")
-        return redirect('/')
     
-    flash('No file found to delete')
-    return redirect('/')
+        return jsonify(
+        message="Video Deleted Sucessfully")
+    
+    return jsonify(message="Video Deleted Unsucessfully")
 
 # api call/route for configuring the filters into a global variable
 # that lasts while the python server is running
-@app.route("/configurefilters", methods=['POST'])
+@app.route("/configurefilters", methods=['POST', 'GET'])
 def configure_filters():
-
-    # global word allows to be used outside of this function
-    global filters
-    # converts filters to python dictionary
-    filters = request.form.getlist('filter')
-
-    for filter in filters:
-       print(filter)
-    
-    return redirect('/')
-
+    if request.method == "POST":
+        # global word allows to be used outside of this function
+        global filters
+        # converts filters to python dictionary
+        filters = request.form.getlist('filter')
+    return '/'
 # api call/route for applying the filters stored in the global variable
 @app.route("/applyfilters", methods=['GET'])
 def applyfilters():
@@ -93,7 +92,7 @@ def applyfilters():
     # checks that 
     if(len(filters) == 0):
         return jsonify(
-        message="No filters were configured",
+        message="No filters are configured. Please configure filters first",
         )
 
     # iterates over the list of filters and applies them
