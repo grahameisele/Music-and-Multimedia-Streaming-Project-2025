@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, flash, abort
 from flask import jsonify
 
 import os
@@ -18,40 +18,26 @@ def homepage():
     return render_template('project_template.html')
 
 # api call/route for uploading videos
-@app.route("/uploadvideo", methods=['GET, POST'])
+@app.route("/uploadvideo", methods=['POST', 'GET'])
 def upload_video():
 
     # checks if an uploaded video file already exists
     if(len(os.listdir("static//videos"))) > 0:
-        return jsonify(
-            message='Video Already Uploaded',
-        )
-
-    # makes sure that the user actually provided a file
-    if 'file' not in request.files:
-        return jsonify(
-            message='No file part in the request',
-        )
+        flash(message='Video Already Uploaded')
+        abort(404)
+        return '/'        
 
     # gets file from the request and checks that it has a name
     file = request.files['file']
     if file.filename == '':
-         return jsonify(
-            message='No file selected',
-        )
-    
-    # checks if file is mp4 file
-    if (not file.filename.endswith('.mp4')):
-        return jsonify(
-            message='File Not MP4 Format',
-        )
+         flash('No file selected')
+         app.abort(404)
+         return '/'
     
     # saves the file to the local server folder in the statics folder
     file.save("static//videos//video.mp4")
     
-    return jsonify(
-            message='Video Sucessfully Uploaded',
-        )
+    return '/'
 
 # api call/route for deleting the video on the server
 @app.route("/deletevideo", methods=['GET'])
