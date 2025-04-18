@@ -39,6 +39,33 @@ def save_audio(path, samples, sample_rate):
 
     wav.write(path, sample_rate, samples)
 
+
+def calculate_gain_compression(x, m, compresser_threshold=0, limiter_threshold=49.05):
+    
+    #convert to decibel
+    newX = x * 0.001497
+    
+    if(x > 0 and x <= compresser_threshold):
+       newX = m * x
+    
+    if(x > compresser_threshold and x <= 49.05):
+        newX = m * x + m * x * math.log(x / compresser_threshold)
+
+    if(x >= 0 and x >= -compresser_threshold):
+        newX = m * x
+    
+    if(x >= -49 and x < -compresser_threshold):
+        -m * compresser_threshold - -m * compresser_threshold * math.log(-x / compresser_threshold)
+    
+    if(abs(newX) > limiter_threshold):
+        if(newX) > 0:
+            newX = limiter_threshold
+        else:newX = -limiter_threshold
+    
+    # convert back to integer
+    newX = round(newX / 0.001497)
+    return newX
+
 # Purpose 
 # to simulate and apply gain compression to a given array of samples
 
@@ -46,23 +73,18 @@ def save_audio(path, samples, sample_rate):
 # samples
 # the array of samples
 
+# compressor_threshold: when to start non linear increase (in db)
+# limiter_threshold: max amplitude for any value (+ or -) (in db)
+
 # Returns 
 # samples with gain compression applied
 
-def apply_gain_compression(samples):
+def apply_gain_compression(samples, compressor_threshold=0, limiter_threshold=49.05):
 
+    # amplitude of 0 is 0 db
+    # for each increase in 1 away from 0, increase of db by 0.001497
     for i, sample, in enumerate(samples):
 
-        if sample > 0:
-            samples[i] = (abs(sample) + 1000 * math.sqrt(sample)) / 6.0
-
-        if sample < 0:
-            samples[i] = -1.0 * ((abs(sample) + 1000 * math.sqrt(abs(sample))) / 6.0)
-
-        if samples[i] > 32767:
-            samples[i] = 32767
-        
-        if samples[i] < -32768:
-            samples[i] = 32768
+         samples[i] = calculate_gain_compression(sample, 1.01, compresser_threshold=compressor_threshold, limiter_threshold=limiter_threshold)
     
     return samples 

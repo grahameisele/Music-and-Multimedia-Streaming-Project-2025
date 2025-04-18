@@ -1,5 +1,8 @@
+import glob
 from flask import Flask, render_template, request, flash, abort
 from flask import jsonify
+from os import access, R_OK
+from os.path import isfile
 
 import os
 import video
@@ -47,8 +50,10 @@ def delete_video():
     if os.path.exists("static//videos//video.mp4"):
         print("video exists")
 
-        # delete the file
-        os.remove("static//videos//video.mp4")
+        # delete the original file user inputed video file along with the output file
+        files = glob.glob('static//videos//*')
+        for f in files:
+            os.remove(f)
     
         return jsonify(
         message="Video Deleted Sucessfully")
@@ -85,6 +90,13 @@ def applyfilters():
     for filter in filters:
         if('grayscale:' in filter):
             video.greyScaleVideo()
+        if('colorinvert:' in filter):
+            video.invertVideo()
+
+
+
+    while(not (isfile("static//videos//output.mp4") and access("static//videos//output.mp4", R_OK))):
+        print("waiting for file to be readable")
 
     global filters_applied
     filters_applied = True

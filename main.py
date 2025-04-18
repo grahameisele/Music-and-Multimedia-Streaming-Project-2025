@@ -1,5 +1,6 @@
 import argparse
 import server
+import audio
 #main program file
 
 # parse arguments given by the user
@@ -10,8 +11,8 @@ def parse_arguments():
 
 # main function
 def main():
-    #samples, sample_rate = audio.get_samples_and_sample_rate(args.input)
-    #samples = audio.apply_gain_compression(samples)
+    #samples, sample_rate = audio.get_samples_and_sample_rate("test.wav")
+    #samples = audio.apply_gain_compression(samples, 45, 45)
     #audio.save_audio("output.wav", samples, sample_rate)
 
     # start the web server
