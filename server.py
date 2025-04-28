@@ -100,8 +100,16 @@ def applyfilters():
         if('frameInterpolate:' in filter):
             fps_value = util.parse_fps_filter(filter)
 
-            # applies ffmpeg fps interpolate function
-            video.fps_interpolate(fps_value)
+            if(fps_value <= 1):
+                 return jsonify(
+                message="FPS Value Cannot be less than or equal to 1.",
+            )
+            elif(fps_value >= 1):
+                video.fps_interpolate(fps_value)
+        if('upscale:' in filter):
+            width, height = util.parse_upscale_filter(filter)
+            print("Width:", width)
+            print("Height: ", height)
                 
 
     while(not (isfile("static//videos//output.mp4") and access("static//videos//output.mp4", R_OK))):

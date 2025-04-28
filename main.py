@@ -11,9 +11,9 @@ def parse_arguments():
 
 # main function
 def main():
-    #samples, sample_rate = audio.get_samples_and_sample_rate("test.wav")
-    #samples = audio.apply_gain_compression(samples, 45, 45)
-    #audio.save_audio("output.wav", samples, sample_rate)
+    # samples, sample_rate = audio.get_samples_and_sample_rate("test.wav")
+    # samples = audio.apply_gain_compression(samples, 2, 200)
+    # audio.save_audio("output.wav", samples, sample_rate)
 
     # start the web server
     server.start_server()

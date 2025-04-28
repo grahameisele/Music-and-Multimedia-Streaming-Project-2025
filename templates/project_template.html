@@ -233,7 +233,34 @@
             };
 
 
-            const getProp = (prop_name) => ({ name: prop_name, value: document.getElementById("frameInterpolateTargetFps").value });
+            const getProp =(prop_name) =>
+            {
+                var prop;
+
+                if(prop_name === "frameInterpolateTargetFps")
+                {
+                    prop = { 
+                        name: prop_name, 
+                        value: document.getElementById("frameInterpolateTargetFps").value 
+                    };
+                }
+                else if(prop_name === "upscaleTargetWidth")
+                {
+                    prop = { 
+                        name: prop_name, 
+                        value: document.getElementById("upscaleTargetWidth").value 
+                    };
+                }
+                else if(prop_name === "upscaleTargetHeight")
+                {
+                    prop = { 
+                        name: prop_name, 
+                        value: document.getElementById("upscaleTargetHeight").value 
+                    };
+                }
+                
+                return prop;
+            }
             const clean = () => {
                 filterList = [];
                 refreshFiltersList();
@@ -243,15 +270,7 @@
                 const selectedVideoFilter = videoFilterSelect.value;
                 const filterConfig = { name: selectedVideoFilter, props: [] };
                 if (selectedVideoFilter === "frameInterpolate") {
-                    if(getProp("frameInterpolateTargetFps").value >= 0)
-                    {
-                        filterConfig.props.push(getProp("frameInterpolateTargetFps"));
-                    }
-                    else
-                    {
-                        alert("FPS Value Cannot be less than or equal to 1.")
-                    }
-                    
+                    filterConfig.props.push(getProp("frameInterpolateTargetFps"));
                 } else if (selectedVideoFilter === "upscale") {
                     filterConfig.props.push(getProp("upscaleTargetWidth"), getProp("upscaleTargetHeight"));
                 }
