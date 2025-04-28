@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, flash, abort
 from flask import jsonify
 from os import access, R_OK
 from os.path import isfile
+import util
 
 import os
 import video
@@ -69,6 +70,10 @@ def configure_filters():
         global filters
         # converts filters to python dictionary
         filters = request.form.getlist('filter')
+
+        for filter in filters:
+            print(filter)
+
     return '/'
 # api call/route for applying the filters stored in the global variable
 @app.route("/applyfilters", methods=['GET'])
@@ -92,8 +97,12 @@ def applyfilters():
             video.greyScaleVideo()
         if('colorinvert:' in filter):
             video.invertVideo()
+        if('frameInterpolate:' in filter):
+            fps_value = util.parse_fps_filter(filter)
 
-
+            # applies ffmpeg fps interpolate function
+            video.fps_interpolate(fps_value)
+                
 
     while(not (isfile("static//videos//output.mp4") and access("static//videos//output.mp4", R_OK))):
         print("waiting for file to be readable")
@@ -109,7 +118,7 @@ def applyfilters():
 @app.route("/startstreaming", methods=['GET'])
 def startstreaming():
     
-    # returns json saying wether video can procede to play
+    # returns json saying whether the video can proceed to play
     return jsonify(
         canPlay=filters_applied,
     )

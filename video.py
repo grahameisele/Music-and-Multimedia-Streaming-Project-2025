@@ -48,5 +48,25 @@ def invertVideo():
 
     subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
 
+    return True
+
+# Purpose
+# to interoplate the fps of a video
+def fps_interpolate(fps):
+
+    # checks that the video exists first
+    if(len(os.listdir("static//videos"))) <= 0:
+        return False
+
+    # if there already has been a processed video
+    if(len(os.listdir("static//videos"))) >= 2:
+        subprocess.call(["ffmpeg", "-i", "static/videos/video.mp4", "-filter:v", f"fps={fps}", "static/videos/new_output.mp4"]) 
+        os.remove("static//videos//output.mp4")
+        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
+
+        return True
+
+    subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
+
     
     return True
