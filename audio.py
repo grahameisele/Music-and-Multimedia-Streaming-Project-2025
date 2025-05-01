@@ -50,43 +50,24 @@ def save_audio(path, samples, sample_rate):
 #  limiter_threshold: limit of the amplitude 
 def calculate_gain_compression(x, m, compresser_threshold, limiter_threshold):
 
-    # initialize output x to 0
     outputX = x
-    # convert to decibel
-    if(x > 0):
-        x_in_decibel = 20 * math.log10(abs(x))
-    elif(x < 0):
-        x_in_decibel = -20 * math.log10(abs(x))
-    else:
-        x_in_decibel = 0
-    
-    # linear incrase
-    if(x_in_decibel > 0 and x_in_decibel <= compresser_threshold):
-       outputX = m * x_in_decibel
-    
-    # non-linear increase (compresion)
-    if(x_in_decibel > compresser_threshold and x_in_decibel > 0):
-        outputX = m * x_in_decibel + m * x_in_decibel * math.log(x_in_decibel / compresser_threshold)
 
-    # linear increase
-    if(x_in_decibel < 0 and x_in_decibel >= -compresser_threshold):
-        outputX = -m * x_in_decibel
+    # convert compressor threshold and limiter threshold to amplitude
+    compresser_threshold_amplitude = math.pow(10, compresser_threshold / 20.0)
+    limiter_threshold_amplitude = math.pow(10, limiter_threshold / 20.0)
+   
+    # linear incrase
+    if(x <= compresser_threshold_amplitude):
+       outputX = m * x
     
     # non-linear increase (compresion)
-    if(x_in_decibel < 0 and x_in_decibel < -compresser_threshold):
-        outputX = -m * compresser_threshold - -m * compresser_threshold * math.log(-x_in_decibel / compresser_threshold)
+    if(x > compresser_threshold_amplitude):
+        outputX = m * x + m * x * math.log(x / compresser_threshold_amplitude)
     
-    if(abs(outputX) > limiter_threshold):
-        if(outputX) > 0:
-            outputX = limiter_threshold
-        else:outputX = -limiter_threshold
-    
-    # convert back to amplitude
-    if(x_in_decibel > 0):
-        x_in_decibel = math.pow(10, (abs(x_in_decibel) / 20))
-    elif(x_in_decibel < 0):
-        x_in_decibel = math.pow(10, (abs(x_in_decibel) / 20))
-    
+    # check if outputX is greater than the limiter threshold
+    if(outputX > limiter_threshold_amplitude):
+        outputX = limiter_threshold_amplitude
+
     return outputX
 
 # Purpose 
@@ -104,11 +85,9 @@ def calculate_gain_compression(x, m, compresser_threshold, limiter_threshold):
 
 def apply_gain_compression(samples, compressor_threshold, limiter_threshold):
 
-    # amplitude of 0 is 0 db
-    # for each increase in 1 away from 0, increase of db by 0.001497
     for i, sample, in enumerate(samples):
 
-         samples[i] = calculate_gain_compression(sample, 5, compresser_threshold=compressor_threshold, limiter_threshold=limiter_threshold)
+         samples[i] = calculate_gain_compression(sample, 3, compresser_threshold=compressor_threshold, limiter_threshold=limiter_threshold)
     
          
     return samples 

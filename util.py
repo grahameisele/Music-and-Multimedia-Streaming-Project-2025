@@ -33,6 +33,16 @@ def parse_fps_filter(fps_filter):
         print('Please enter an integer')
         return -1
     
+
+# Purpose
+# converts the upscale filter to a integer width and height values
+
+# Params
+# upscale_filter
+# the string value of the fps filter inputted by the user
+
+# returns
+# the fps value the user inputted if it is >= 0, -1 otherwise
 def parse_upscale_filter(upscale_filter):
 
     start = 'upscaleTargetWidth='
