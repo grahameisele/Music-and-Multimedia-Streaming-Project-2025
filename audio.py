@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.io.wavfile as wav
 import math
-
+import matplotlib.pyplot as plt
 
 # Purpose
 # reads in an audio file
@@ -91,3 +91,37 @@ def apply_gain_compression(samples, compressor_threshold, limiter_threshold):
     
          
     return samples 
+
+# Purpose
+# applies a prep emphasis filter onto given samples
+#
+# Parameters
+#
+# Samples 
+# the samples of audio provided to apply the filter on
+# 
+# alpha
+# a costant parameter value between 0 and 1
+def apply_pre_emphasis_filter(samples, alpha=0.9):
+
+    num_samples = len(samples)
+
+    y = [0] * num_samples
+
+    print(num_samples)
+
+    print(len(y))
+
+    for x in range(0, num_samples):
+        #print(x)
+        
+        y[x] = int(samples[x] - alpha * samples[x - 1])
+
+    fig, axs = plt.subplots(2)
+    fig.suptitle('Vertically stacked subplots')
+    axs[0].plot(y)
+    axs[1].plot(samples)
+
+    plt.show()
+
+    return y  
