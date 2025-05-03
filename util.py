@@ -182,6 +182,9 @@ def combine_audio_with_video():
         print("User uploaded video to extract audio from does not exist")
         return False
     
-    ffmpeg_command = ["ffmpeg", "-y", "-i", video_file_path, "-i", "static/audio/output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "static//videos//new_out.mp4"]
+    ffmpeg_command = ["ffmpeg", "-y", "-i", video_file_path, "-i", "static//audio//output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "static//videos//new_output.mp4"]
+
+    os.remove("static//videos/output.mp4")
+    os.rename("static//videos/new_output.mp4", "static//videos/output.mp4")
 
     subprocess.call(ffmpeg_command)

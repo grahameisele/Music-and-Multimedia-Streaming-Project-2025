@@ -3,6 +3,7 @@ import scipy.io.wavfile as wav
 from scipy.signal import butter
 import math
 from scipy.signal import lfilter
+import os
 
 # Purpose
 # reads in an audio file
@@ -76,12 +77,11 @@ def calculate_gain_compression(x, m, compresser_threshold, limiter_threshold):
 # the array of samples
 
 # compressor_threshold: when to start non linear increase (in db)
-# limiter_threshold: max amplitude for any value (+ or -) (in db)
+# limiter_threshold: max amplitude for any value (+ or -) (in db
 
-# Returns 
-# samples with gain compression applied
+def apply_gain_compression(compressor_threshold, limiter_threshold):
 
-def apply_gain_compression(samples, compressor_threshold, limiter_threshold):
+    samples, sample_rate = get_samples_and_sample_rate("static//audio//output.wav")
 
     # rows: num of samples
     # cols: num of channels (2)
@@ -91,8 +91,12 @@ def apply_gain_compression(samples, compressor_threshold, limiter_threshold):
     for i in range(0, rows):
          for j in range(0, cols):
             samples[i][j] = calculate_gain_compression(samples[i][j], 3, compresser_threshold=compressor_threshold, limiter_threshold=limiter_threshold)
-         
-    return samples 
+    
+    # saves the audio to a new processed audio 
+    save_audio("static//audio//processsed_audio.wav", samples, sample_rate)
+
+    os.remove("static//audio//output.wav")
+    os.rename("static//audio//processsed_audio.wav", "static//audio//output.wav")
 
 # Purpose
 # applies a prep emphasis filter onto given samples

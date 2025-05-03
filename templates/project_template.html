@@ -329,7 +329,7 @@
                 //check if there is a valid uploaded file
                 if(typeof selectedFile === 'undefined')
                 {
-                    alert('File to upload does not exist. Please select a valid .mp4 file.')
+                    alert('You did not select a file to upload. Please select a valid .mp4 file.')
                 }
                 else if(!selectedFile.name.includes('.mp4'))
                 {   
@@ -423,6 +423,9 @@
                      //gets video and video container element
                     let videoContainer = document.getElementById("videoContainer");
                     let videoElements = document.getElementsByTagName("video");
+
+                    //makes video container invisible first
+                    videoContainer.style = "";
 
                     videoElements[0].src = "http://localhost//static//videos//output.mp4";
                     videoElements[0].load();

@@ -1,10 +1,9 @@
-import glob
 from flask import Flask, render_template, request, flash, abort
 from flask import jsonify
 from os import access, R_OK
 from os.path import isfile
 import util
-
+import audio
 import os
 import video
 
@@ -84,6 +83,8 @@ def configure_filters():
 @app.route("/applyfilters", methods=['GET'])
 def applyfilters():
 
+    at_least_one_video_filter = False
+
     # checks that there is a video to apply the filters to
     if(not os.path.exists("static//videos//video.mp4")):
         return jsonify(
@@ -95,6 +96,9 @@ def applyfilters():
         return jsonify(
         message="No filters are configured. Please configure filters first",
         )
+    
+    # extract the audio from the video to apply the audio filters
+    util.extract_audio_from_video()
 
     # iterates over the list of filters and applies them
     for filter in filters:
@@ -119,19 +123,31 @@ def applyfilters():
                 message="Error, width or height are less than 1. Both must be greater than or equal to one")    
         
         if('gainCompressor' in filter):
-            compressor_threshold, limitor_threshold = util.parse_gain_compressor_filter(filter)
+            compressor_threshold, limiter_threshold = util.parse_gain_compressor_filter(filter)
 
             # check that user has entered valid integers for both of the input fields
-            if len(str(compressor_threshold)) == 0 or len(str(limitor_threshold)) == 0:
+            if len(str(compressor_threshold)) == 0 or len(str(limiter_threshold)) == 0:
                return jsonify(
                 message="Error, one of the values entered for the gain compression filter are empty.")
             
             else:
-                print("Limitor Threshold: ", limitor_threshold)
-                print("Gain Threshold: ", compressor_threshold)
+               # apply the gain compression with the user provided variables
+               audio.apply_gain_compression(compressor_threshold, limiter_threshold)
 
-    while(not (isfile("static//videos//output.mp4") and access("static//videos//output.mp4", R_OK))):
-        print("waiting for file to be readable")
+    
+    # check that the output file is readable
+    while(not isfile("static//videos//output.mp4") or not access("static//videos//output.mp4", R_OK)):
+        print("waiting for video file to be readable")
+
+    # check that the output audio is readable
+    while(not isfile("static//audio//output.wav") or not access("static//audio//output.wav", R_OK)):
+        print("waiting for audio file to be readable")
+    
+    if not at_least_one_video_filter:
+        os
+
+    # combine the audio with filters applied with the video that has the filters appleid
+    util.combine_audio_with_video()
 
     global filters_applied
     filters_applied = True
