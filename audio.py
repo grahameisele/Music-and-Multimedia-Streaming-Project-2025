@@ -3,7 +3,6 @@ import scipy.io.wavfile as wav
 from scipy.signal import butter
 import math
 from scipy.signal import lfilter
-import matplotlib.pyplot as plt
 
 # Purpose
 # reads in an audio file

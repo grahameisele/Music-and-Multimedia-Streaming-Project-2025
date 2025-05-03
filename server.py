@@ -71,9 +71,10 @@ def configure_filters():
         # converts filters to python dictionary
         filters = request.form.getlist('filter')
 
-        for filter in filters:
-            print(filter)
-
+        return jsonify(
+        message="Filters configured",
+        )
+        
     return '/'
 # api call/route for applying the filters stored in the global variable
 @app.route("/applyfilters", methods=['GET'])

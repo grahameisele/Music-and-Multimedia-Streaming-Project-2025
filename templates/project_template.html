@@ -397,13 +397,19 @@
                     formData.append("filter", currentFilterText)
                 }
 
-                try {
+                try 
+                {
                     const response_one = await fetch("/configurefilters", {
                         method: "POST",
                         body: formData,
+                    }).then(response => response.json())
+                    .then(data => {
+                        alert(data["message"]);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching streaming status:", error);
                     });
-
-
+                    
                 } catch (error) {
                     alert("An error occurred while trying to configure the filters.");
                 }
@@ -434,6 +440,7 @@
                     let videoElements = document.getElementsByTagName("video");
 
                     videoElements[0].src = "http://localhost//static//videos//output.mp4";
+                    videoElements[0].load();
                     videoElements[0].load();
 
                     //makes video container visible
