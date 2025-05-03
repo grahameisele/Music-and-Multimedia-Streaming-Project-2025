@@ -10,11 +10,8 @@ def parse_arguments():
 
 # main function
 def main():
-   
-
+    
     # start the web server
-    # util.extract_audio_from_video()
-
     server.start_server()
 
 # to tell that it is main program

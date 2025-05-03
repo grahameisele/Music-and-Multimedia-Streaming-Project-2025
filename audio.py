@@ -182,3 +182,30 @@ def apply_bandpass_filter(filter_order, samples, sample_rate, pass_band = [800, 
 
     return apply_filter
 
+# Purpose: To  apply a simple voice-enchancement-like filter consisting of a
+#
+# 1. Pre-emphasis filter, Implementing the formula y[n] = x[n] – α·x[n-1]
+# (with y being the output, x being the input and α between 0 and 1).
+#
+# 2. Band-pass filter (Butterworth filter, see Lab1), in the range 800-6000 Hz.
+# 
+# Band-pass filter (Butterworth filter, see Lab1), in the range 800-6000 Hz.
+#
+# Params
+#
+# samples: the provided audio samples on which to apply the voice filter
+# 
+# pre_emphasis_alpha: the alpha value to be used in the formula for the pre-emphasis filter
+# 
+# high_pass_filter_order: the filter order to use provided by the user
+#
+# Returns
+#
+# the samples with the applied simple voice enhancement filter 
+
+def apply_voice_enchancement_filter(samples, sample_rate, pre_emphasis_alpha, high_pass_filter_order):
+
+    samples = apply_pre_emphasis_filter(samples, pre_emphasis_alpha)
+    samples = apply_bandpass_filter(high_pass_filter_order, samples, sample_rate, [800, 6000])
+
+    return samples
