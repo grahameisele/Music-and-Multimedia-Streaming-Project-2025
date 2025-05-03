@@ -117,6 +117,18 @@ def applyfilters():
             if(not video.upscale_video(width, height)):
                   return jsonify(
                 message="Error, width or height are less than 1. Both must be greater than or equal to one")    
+        
+        if('gainCompressor' in filter):
+            compressor_threshold, limitor_threshold = util.parse_gain_compressor_filter(filter)
+
+            # check that user has entered valid integers for both of the input fields
+            if len(str(compressor_threshold)) == 0 or len(str(limitor_threshold)) == 0:
+               return jsonify(
+                message="Error, one of the values entered for the gain compression filter are empty.")
+            
+            else:
+                print("Limitor Threshold: ", limitor_threshold)
+                print("Gain Threshold: ", compressor_threshold)
 
     while(not (isfile("static//videos//output.mp4") and access("static//videos//output.mp4", R_OK))):
         print("waiting for file to be readable")

@@ -97,3 +97,48 @@ def apply_ffmpeg_video_filter(ffmpeg_command):
     #if there has not already been a processed vdeo
     else:
         subprocess.call(ffmpeg_command) 
+
+
+# purpose
+# to parse the gain compresor filter provided by the user
+#
+# params
+# gain_compressor_filter: the unparsed gain_compressor_filter found in the html element
+#
+# returns
+# the parsed gain_compressor_filter
+
+def parse_gain_compressor_filter(gain_compressor_filter):
+
+    # ex unparsed filter
+    # gainCompressor: gainCompressorThreshold=-1, limiterThreshold=0,
+
+    # get the compresor threshold
+    
+    first_equal_sign_index = gain_compressor_filter.find("=")
+    first_comma_index = gain_compressor_filter.find(",")
+
+    gain_compressor_threshold = gain_compressor_filter[first_equal_sign_index + 1 : first_comma_index]
+
+    # try to convert gain compressor threshold to integer from string
+    try:
+        gain_compressor_threshold = int(gain_compressor_threshold) 
+    except ValueError:
+        print("Error parsing gain compressor threshold")
+    
+    # get the limiter threshold
+
+    limiter_threshold_filter = gain_compressor_filter[first_comma_index + 1:]
+
+    limiter_threshold_first_equal_index = limiter_threshold_filter.find("=")
+    limiter_threshold_first_comma_index = limiter_threshold_filter.find(",")
+
+    limiter_threshold = limiter_threshold_filter[limiter_threshold_first_equal_index + 1 : limiter_threshold_first_comma_index]
+
+     # try to convert gain limiter threshold to integer from string
+    try:
+        limiter_threshold = int(limiter_threshold) 
+    except ValueError:
+        print("Error parsing limiter threshold")
+
+    return gain_compressor_threshold, limiter_threshold
