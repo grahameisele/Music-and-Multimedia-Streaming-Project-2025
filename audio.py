@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.io.wavfile as wav
+from scipy.signal import butter
 import math
+from scipy.signal import lfilter
 import matplotlib.pyplot as plt
 
 # Purpose
@@ -125,3 +127,32 @@ def apply_pre_emphasis_filter(samples, alpha=0.9):
     plt.show()
 
     return y  
+
+# Purpose
+# 
+# applies a low bass butterworth filter to given audio
+#
+# Params
+# filter order: the filter order number provided by the user
+#  
+# samples: the array of samples provided by the user
+#
+# sample_rate: sample_rate of the audio provided by the user
+#
+# returns
+# the original audio samples provided by the user with the filter applied
+
+def apply_low_pass_filter(filter_order, samples, sample_rate):
+
+    # butterworth fitler
+    # default b type is lowpass
+    # 10000 hz is the cutoff frequency as specified by the project outline
+    b, a = butter(filter_order, 10000, fs=sample_rate)
+
+    # applies the filter to the given audio
+    apply_filter = lfilter(b, a, samples)
+
+    # makes the audio samples 16 bit since the wav format is 16 bit wav audio
+    apply_filter = apply_filter.astype(np.int16)
+
+    return apply_filter
