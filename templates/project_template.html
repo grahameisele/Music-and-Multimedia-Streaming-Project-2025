@@ -225,6 +225,7 @@
                     for (const filter of filterList) {
                         let s = `${filter.name}: `;
                         for (const prop of filter.props) {
+                            console.log("Name: " + filter.props)
                             s += `${prop.name}=${prop.value}, `;
                         }
                         divNode.innerHTML += h4Node(s.trim());
@@ -233,33 +234,14 @@
             };
 
 
-            const getProp =(prop_name) =>
+            const getProp = (prop_name) =>
             {
-                var prop;
-
-                if(prop_name === "frameInterpolateTargetFps")
-                {
-                    prop = { 
-                        name: prop_name, 
-                        value: document.getElementById("frameInterpolateTargetFps").value 
-                    };
-                }
-                else if(prop_name === "upscaleTargetWidth")
-                {
-                    prop = { 
-                        name: prop_name, 
-                        value: document.getElementById("upscaleTargetWidth").value 
-                    };
-                }
-                else if(prop_name === "upscaleTargetHeight")
-                {
-                    prop = { 
-                        name: prop_name, 
-                        value: document.getElementById("upscaleTargetHeight").value 
-                    };
-                }
-                
-                return prop;
+                const propValue = document.getElementById(prop_name).value;
+                console.log(`Getting prop for ${prop_name}: ${propValue}`);
+                return { 
+                    name: prop_name,
+                    value: document.getElementById(prop_name).value 
+                };
             }
             const clean = () => {
                 filterList = [];
@@ -274,16 +256,19 @@
                 } else if (selectedVideoFilter === "upscale") {
                     filterConfig.props.push(getProp("upscaleTargetWidth"), getProp("upscaleTargetHeight"));
                 }
+                
                 filterList.push(filterConfig);
                 refreshFiltersList();
             };
             const addAudioFilter = () => {
                 const audioFilterSelect = document.getElementById("audioFilter");
                 const selectedAudioFilter = audioFilterSelect.value;
+                console.log("selected Audio Filter Value:" + selectedAudioFilter)
                 const filterConfig = { name: selectedAudioFilter, props: [] };
                 if (selectedAudioFilter === "gainCompressor") {
-                    filterConfig.props.push(getProp("compressorThreshold"), getProp("limiterThreshold"));
-                } else if (selectedAudioFilter === "voice_enhancement") {
+                    console.log("adding gain Compressor Audio filter.")
+                    filterConfig.props.push(getProp("gainCompressorThreshold"), getProp("limiterThreshold"));
+                } else if (selectedAudioFilter === "voiceEnhancement") {
                     filterConfig.props.push(getProp("preemphasisAlpha"), getProp("highPassFilter"));
                 } else if (selectedAudioFilter === "denoiseDelay") {
                     filterConfig.props.push(getProp("noisePower"), getProp("delay"), getProp("delayGain"));
@@ -292,6 +277,8 @@
                 } else if (selectedAudioFilter === "phone") {
                     filterConfig.props.push(getProp("phoneFilterOrder"), getProp("phoneSideGain"));
                 }
+                
+                console.log("Props being pushed:", filterConfig.props);
                 filterList.push(filterConfig);
                 refreshFiltersList();
             };
@@ -369,10 +356,8 @@
                             alert("An error occurred while uploading the file.");
                     }
 
-                    videoUploaded = true;
-
-                    };
                 }
+            }
 
             const deleteVideo = async () => {
                
