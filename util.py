@@ -142,3 +142,29 @@ def parse_gain_compressor_filter(gain_compressor_filter):
         print("Error parsing limiter threshold")
 
     return gain_compressor_threshold, limiter_threshold
+
+# Purpose 
+# 
+# extracts wav audio from the uploaded user video
+#
+def extract_audio_from_video():
+
+    # path of the video to extract audio from
+    video_file_path = "static//videos//video.mp4"
+
+    # checks if an uploaded video file already exists
+    if(os.path.exists(video_file_path)) <= 0:
+        print("User uploaded video to extract audio from does not exist")
+        return False
+
+    # -acodec: audio codec
+    # -c: is a stream specifier and a means audio tream
+    # the audio codec to use, 16 bit audio
+    # -ar : set audio sampple rate
+    # -ac: number of audio channels which is 2 for stereo  
+
+    ffmpeg_command = ["ffmpeg", "-y", "-i", video_file_path, "-c:a", "pcm_s16le", "-ar", "44100", "-ac", "2", "static/audio/output.wav"]
+    
+    subprocess.call(ffmpeg_command) 
+
+    return True
