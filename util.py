@@ -1,4 +1,6 @@
+import os
 import re
+import subprocess
 # module with utility functions
 
 # Purpose
@@ -63,3 +65,35 @@ def parse_upscale_filter(upscale_filter):
     height = int(height)
 
     return [width, height]
+
+
+# Purpose
+#  applies a given ffmpeg command to the video that the user gives
+#
+# Params
+#
+# ffmpeg_command : the given ffmpeg command
+
+def apply_ffmpeg_video_filter(ffmpeg_command):
+
+    input_video_path_arg_index = -1
+    output_video_path_arg_index = -1
+
+    input_video_path_arg_index = ffmpeg_command.index("static/videos/video.mp4")
+    output_video_path_arg_index = ffmpeg_command.index("static/videos/output.mp4")
+
+    # if there already has been a processed video
+    if(len(os.listdir("static//videos"))) >= 2:
+
+        ffmpeg_command[input_video_path_arg_index] = "static/videos/output.mp4"
+        ffmpeg_command[output_video_path_arg_index] = "static/videos/new_output.mp4"
+
+        subprocess.call(ffmpeg_command) 
+        os.remove("static//videos//output.mp4")
+        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
+
+        return True
+    
+    #if there has not already been a processed vdeo
+    else:
+        subprocess.call(ffmpeg_command) 

@@ -1,5 +1,6 @@
 import subprocess
 import os
+import util
 
 # Purpose
 # greyscale the video uploaded by the user
@@ -18,16 +19,9 @@ def greyScaleVideo():
     # "hue=s=0" hue and saturation = 0 for greyscale
     # last param is the output directory 
 
-    # if there already has been a processed video
-    if(len(os.listdir("static//videos"))) >= 2:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/output.mp4", "-filter:v", "hue=s=0", "static/videos/new_output.mp4"]) 
-        os.remove("static//videos//output.mp4")
-        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
+    ffmpeg_command = ["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "hue=s=0", "static/videos/output.mp4"]
 
-        return True
-    
-    else:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "hue=s=0", "static/videos/output.mp4"]) 
+    util.apply_ffmpeg_video_filter(ffmpeg_command)
 
     return True
 
@@ -38,17 +32,16 @@ def invertVideo():
     # checks that the video exists first
     if(len(os.listdir("static//videos"))) <= 0:
         return False
+    
+    # ffmpeg command with video filter
+    # 
+    # filter:v means apply a video filter
+    # negate: inverts the colors of a video: 
+    # I found in: https://ffmpeg.org/ffmpeg-filters.html
 
-    # if there already has been a processed video
-    if(len(os.listdir("static//videos"))) >= 2:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/output.mp4", "-filter:v", "negate", "static/videos/new_output.mp4"]) 
-        os.remove("static//videos//output.mp4")
-        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
+    ffmpeg_command = ["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]
 
-        return True
-
-    else:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
+    util.apply_ffmpeg_video_filter(ffmpeg_command)
 
     return True
 
@@ -65,18 +58,11 @@ def fps_interpolate(fps):
     if(len(os.listdir("static//videos"))) <= 0:
         return False
 
-    # if there already has been a processed video
-    if(len(os.listdir("static//videos"))) >= 2:
-        subprocess.call(["ffmpeg", "-i", "static/videos/video.mp4", "-filter:v", f"fps={fps}", "static/videos/new_output.mp4"]) 
-        os.remove("static//videos//output.mp4")
-        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
-
-        return True
-
-    else:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
-
+    # ffmpeg command for interpolating the fps of a video
+    ffmpeg_command = ["ffmpeg", "-i", "static/videos/video.mp4", "-filter:v", f"fps={fps}", "static/videos/output.mp4"]
     
+    util.apply_ffmpeg_video_filter(ffmpeg_command)
+
     return True
 
 # Purpose
@@ -100,14 +86,9 @@ def upscale_video(width, height):
         return False
     
     # calls ffmpeg to scale a video to certain width and height
-     # if there already has been a processed video
-    if(len(os.listdir("static//videos"))) >= 2:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"scale={width}:{height}", "static/videos/output.mp4"]) 
-        os.remove("static//videos//output.mp4")
-        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
+    ffmpeg_command = ["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"scale={width}:{height}", "static/videos/output.mp4"]
 
-    else:
-        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"scale={width}:{height}", "static/videos/output.mp4"]) 
+    util.apply_ffmpeg_video_filter(ffmpeg_command)
 
-        return True
+    return True
 
