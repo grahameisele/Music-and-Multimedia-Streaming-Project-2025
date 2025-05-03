@@ -104,27 +104,21 @@ def apply_gain_compression(samples, compressor_threshold, limiter_threshold):
 # 
 # alpha
 # a costant parameter value between 0 and 1
-def apply_pre_emphasis_filter(samples, alpha=0.9):
+def apply_pre_emphasis_filter(samples, alpha=0):
 
+    # gets the number of samples in the audio samples numpy array provided by the user
     num_samples = len(samples)
 
-    y = [0] * num_samples
-
-    print(num_samples)
-
-    print(len(y))
-
+    # creates an empty array of zeros with the length of the given audio samples
+    y = np.zeros(num_samples)
+    
+    # applies the formula  y[n] = x[n] – α·x[n-1] given by the project documentation to the samples 
     for x in range(0, num_samples):
-        #print(x)
         
         y[x] = int(samples[x] - alpha * samples[x - 1])
-
-    fig, axs = plt.subplots(2)
-    fig.suptitle('Vertically stacked subplots')
-    axs[0].plot(y)
-    axs[1].plot(samples)
-
-    plt.show()
+    
+    # converts the array to int16 since audio is 16 bit wav audio
+    y = y.astype(np.int16)
 
     return y  
 
