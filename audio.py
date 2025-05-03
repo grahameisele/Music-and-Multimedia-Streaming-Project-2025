@@ -142,14 +142,41 @@ def apply_pre_emphasis_filter(samples, alpha=0.9):
 # returns
 # the original audio samples provided by the user with the filter applied
 
-def apply_low_pass_filter(filter_order, samples, sample_rate):
+def apply_low_pass_filter(filter_order, samples, sample_rate, cuttoff_freq=10000):
 
     # butterworth fitler
     # default b type is lowpass
     # 10000 hz is the cutoff frequency as specified by the project outline
-    b, a = butter(filter_order, 10000, fs=sample_rate)
+    b, a = butter(filter_order, cuttoff_freq, fs=sample_rate)
 
     # applies the filter to the given audio
+    apply_filter = lfilter(b, a, samples)
+
+    # makes the audio samples 16 bit since the wav format is 16 bit wav audio
+    apply_filter = apply_filter.astype(np.int16)
+
+    return apply_filter
+
+# Purpose
+# 
+# apply a butterworth band pass filter with a given pass band
+#
+# params
+# 
+# filter_order: the filter order provided by the user
+#
+# samples: the audio samples provided by the user
+# 
+# pass band, the pass band with the lower and upper frequencies
+#
+# returns
+# the modified audio with with the applied filter
+
+def apply_bandpass_filter(filter_order, samples, sample_rate, pass_band = [800, 1200]):
+
+    b, a = butter(filter_order, pass_band, fs=sample_rate, btype='bandstop')
+
+     # applies the filter to the given audio
     apply_filter = lfilter(b, a, samples)
 
     # makes the audio samples 16 bit since the wav format is 16 bit wav audio
