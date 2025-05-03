@@ -25,42 +25,46 @@ def homepage():
 @app.route("/uploadvideo", methods=['POST', 'GET'])
 def upload_video():
 
+    video_file_path = "static//videos//video.mp4"
+
     # checks if an uploaded video file already exists
-    if(len(os.listdir("static//videos"))) > 0:
-        flash(message='Video Already Uploaded')
-        abort(404)
-        return '/'        
+    if(os.path.exists(video_file_path)) > 0:
+        return jsonify(message='Video Already Uploaded / Exists')   
 
     # gets file from the request and checks that it has a name
     file = request.files['file']
-    if file.filename == '':
-         flash('No file selected')
-         app.abort(404)
-         return '/'
+    if not file or file.filename == '':
+        return jsonify(message='No video to upload')   
     
     # saves the file to the local server folder in the statics folder
     file.save("static//videos//video.mp4")
     
-    return '/'
+    return jsonify(message='Video uploaded successfully!')   
 
 # api call/route for deleting the video on the server
 @app.route("/deletevideo", methods=['GET'])
 def delete_video():
 
-    # checks if the video file actually exists
-    if os.path.exists("static//videos//video.mp4"):
-        print("video exists")
+    # checks that the filters have been applied before deleting the file
+    # "The server must store the uploaded video until the filtered version has been 
+    #  created, then it is no longer needed and can be deleted"
 
+    if(not filters_applied):
+       return jsonify(message="Video can only be deleted after the filtered version has been made.") 
+
+    # file path of the originally uploaded video by the user
+    video_file_path = "static//videos//video.mp4"
+
+    # checks if the video file actually exists
+    if os.path.exists(video_file_path):
         # delete the original file user inputed video file along with the output file
-        files = glob.glob('static//videos//*')
-        for f in files:
-            os.remove(f)
-    
+        os.remove(video_file_path)
+
         return jsonify(
         message="Video Deleted Sucessfully")
+    else:
+        return jsonify(message="There is no video to delete")
     
-    return jsonify(message="Video Deleted Unsucessfully")
-
 # api call/route for configuring the filters into a global variable
 # that lasts while the python server is running
 @app.route("/configurefilters", methods=['POST', 'GET'])
