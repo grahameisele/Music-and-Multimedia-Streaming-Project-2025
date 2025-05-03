@@ -11,13 +11,13 @@ def parse_arguments():
 
 # main function
 def main():
-     samples, sample_rate = audio.get_samples_and_sample_rate("test.wav")
+    samples, sample_rate = audio.get_samples_and_sample_rate("test.wav")
      #samples = audio.apply_gain_compression(samples, 6, 10)
-     samples = audio.apply_pre_emphasis_filter(samples=samples, alpha=0)
-     audio.save_audio("output.wav", samples, sample_rate)
+     #samples = audio.apply_pre_emphasis_filter(samples=samples, alpha=0)
+     #audio.save_audio("output.wav", samples, sample_rate)
 
     # start the web server
-    #server.start_server()
+    server.start_server()
 
 # to tell that it is main program
 if __name__ == "__main__":

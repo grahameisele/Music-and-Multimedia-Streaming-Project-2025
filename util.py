@@ -1,9 +1,6 @@
 import re
 # module with utility functions
 
-
-
-
 # Purpose
 # converts the fps filter to a integer value from string
 

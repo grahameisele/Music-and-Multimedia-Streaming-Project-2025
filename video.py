@@ -26,7 +26,8 @@ def greyScaleVideo():
 
         return True
     
-    subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "hue=s=0", "static/videos/output.mp4"]) 
+    else:
+        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "hue=s=0", "static/videos/output.mp4"]) 
 
     return True
 
@@ -46,12 +47,18 @@ def invertVideo():
 
         return True
 
-    subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
+    else:
+        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
 
     return True
 
 # Purpose
 # to interoplate the fps of a video
+
+# Parameters
+# fps
+# the fps in which to interoplate to
+
 def fps_interpolate(fps):
 
     # checks that the video exists first
@@ -66,7 +73,41 @@ def fps_interpolate(fps):
 
         return True
 
-    subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
+    else:
+        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", "negate", "static/videos/output.mp4"]) 
 
     
     return True
+
+# Purpose
+# to upscale a video
+
+# Parameters
+#
+# width: the width to which to scale the video to
+# 
+# height: the height to which to scale the video to
+
+def upscale_video(width, height):
+
+    print(width)
+    print(height)
+
+    print("Width less than 0: ", width <= 0)
+    print("Height less than 0: ", height <= 0)
+
+    if(width <= 0 or height <= 0):
+        return False
+    
+    # calls ffmpeg to scale a video to certain width and height
+     # if there already has been a processed video
+    if(len(os.listdir("static//videos"))) >= 2:
+        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"scale={width}:{height}", "static/videos/output.mp4"]) 
+        os.remove("static//videos//output.mp4")
+        os.rename("static//videos//new_output.mp4", "static//videos//output.mp4")
+
+    else:
+        subprocess.call(["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"scale={width}:{height}", "static/videos/output.mp4"]) 
+
+        return True
+

@@ -108,9 +108,10 @@ def applyfilters():
                 video.fps_interpolate(fps_value)
         if('upscale:' in filter):
             width, height = util.parse_upscale_filter(filter)
-            print("Width:", width)
-            print("Height: ", height)
-                
+            
+            if(not video.upscale_video(width, height)):
+                  return jsonify(
+                message="Error, width or height are less than 1. Both must be greater than or equal to one")    
 
     while(not (isfile("static//videos//output.mp4") and access("static//videos//output.mp4", R_OK))):
         print("waiting for file to be readable")
