@@ -35,9 +35,6 @@ def get_samples_and_sample_rate(path):
 
 def save_audio(path, samples, sample_rate):
     samples = np.asarray(samples)
-
-    print("Sample Rate: ", sample_rate)
-
     wav.write(path, sample_rate, samples)
 
 
@@ -86,10 +83,14 @@ def calculate_gain_compression(x, m, compresser_threshold, limiter_threshold):
 
 def apply_gain_compression(samples, compressor_threshold, limiter_threshold):
 
-    for i, sample, in enumerate(samples):
+    # rows: num of samples
+    # cols: num of channels (2)
+    rows, cols = samples.shape
 
-         samples[i] = calculate_gain_compression(sample, 3, compresser_threshold=compressor_threshold, limiter_threshold=limiter_threshold)
-    
+    # iterate over each sample using a nested for loop
+    for i in range(0, rows):
+         for j in range(0, cols):
+            samples[i][j] = calculate_gain_compression(samples[i][j], 3, compresser_threshold=compressor_threshold, limiter_threshold=limiter_threshold)
          
     return samples 
 
@@ -176,3 +177,4 @@ def apply_bandpass_filter(filter_order, samples, sample_rate, pass_band = [800, 
     apply_filter = apply_filter.astype(np.int16)
 
     return apply_filter
+
