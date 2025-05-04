@@ -145,24 +145,12 @@ def applyfilters():
             if(preemphasisAlpha == "error" or highPassFilter == "error"):
                 return jsonify(
                 message="Error, one of the values entered for the voice enhancement filter are invalid or empty.")  
-    
-    # check that the output file is readable
-    while(not isfile("static//videos//output.mp4") or not access("static//videos//output.mp4", R_OK)):
-        print("waiting for video file to be readable")
-
-    # check that the output audio is readable
-    while(not isfile("static//audio//output.wav") or not access("static//audio//output.wav", R_OK)):
-        print("waiting for audio file to be readable")
-
-    # the path of which to combine the modified video and modified audio
-    video_to_combine_audio_with_path = "static//videos//output.mp4"
-
-    # if there is no video filters, just combined the modified audio with the original video
-    if not at_least_one_video_filter:
-        video_to_combine_audio_with_path = "static//videos//video.mp4"
+            
+            # applies the simple voice enhancement filter to the audio
+            audio.apply_voice_enchancement_filter(preemphasisAlpha, highPassFilter)
     
     # combine the audio with filters applied with the video that has the filters appleid
-    util.combine_audio_with_video(video_to_combine_audio_with_path)
+    util.combine_audio_with_video(at_least_one_video_filter)
 
     global filters_applied
     filters_applied = True

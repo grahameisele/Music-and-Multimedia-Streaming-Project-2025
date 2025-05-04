@@ -165,9 +165,10 @@ def parse_voice_enhancement_filter(voice_enhancement_filter):
 
     # try to convert preemphasisAlpha to integer from string
     try:
-        preemphasisAlpha = int(preemphasisAlpha) 
+        print("Pre-emphasis alpha: ", preemphasisAlpha)
+        preemphasisAlpha = float(preemphasisAlpha) 
     except ValueError:
-        print("Error parsing gain preemphasis alpha")
+        print("Error parsing preemphasis alpha")
     
     # get the highPassFilter value
 
@@ -220,15 +221,22 @@ def extract_audio_from_video():
 # Params
 # video_to_combine_audio_with_path: path of the video to combine with
 #
-def combine_audio_with_video(video_to_combine_audio_with_path):
+def combine_audio_with_video(at_least_one_video_filter):
 
-    # checks if an uploaded video file already exists
-    if(os.path.exists(video_to_combine_audio_with_path)) <= 0:
-        print("User uploaded video to extract audio from does not exist")
-        return False
+    # the path of which to combine the modified video and modified audio
+    video_to_combine_audio_with_path = "static//videos//output.mp4"
     
+    # the path which to output the filtered video with the filtered audio
+    output_video_path =  "static//videos//new_output.mp4"
+
+    # if there is no video filters, just combined the modified audio with the original video
+    if not at_least_one_video_filter:
+        print("No video filters")
+        video_to_combine_audio_with_path = "static//videos//video.mp4"
+        output_video_path =  "static//videos//output.mp4"
+
     # ffmpeg command for combining video with filters with audio with filters
-    ffmpeg_command = ["ffmpeg", "-y", "-i", video_to_combine_audio_with_path, "-i", "static//audio//output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "static//videos//new_output.mp4"]
+    ffmpeg_command = ["ffmpeg", "-y", "-i", video_to_combine_audio_with_path, "-i", "static//audio//output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", output_video_path]
 
     subprocess.call(ffmpeg_command)
 

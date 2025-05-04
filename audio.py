@@ -110,16 +110,20 @@ def apply_gain_compression(compressor_threshold, limiter_threshold):
 # a costant parameter value between 0 and 1
 def apply_pre_emphasis_filter(samples, alpha=0):
 
+    alpha = float(alpha)
+
     # gets the number of samples in the audio samples numpy array provided by the user
     num_samples = len(samples)
 
     # creates an empty array of zeros with the length of the given audio samples
-    y = np.zeros(num_samples)
+    y = np.zeros([num_samples, 2], dtype=np.int16)
     
+
     # applies the formula  y[n] = x[n] – α·x[n-1] given by the project documentation to the samples 
     for x in range(0, num_samples):
         
-        y[x] = int(samples[x] - alpha * samples[x - 1])
+        y[x][0] = int(samples[x][0] - alpha * samples[x - 1][0])
+        y[x][1] = int(samples[x][0] - alpha * samples[x - 1][1])
     
     # converts the array to int16 since audio is 16 bit wav audio
     y = y.astype(np.int16)
@@ -203,9 +207,15 @@ def apply_bandpass_filter(filter_order, samples, sample_rate, pass_band = [800, 
 #
 # the samples with the applied simple voice enhancement filter 
 
-def apply_voice_enchancement_filter(samples, sample_rate, pre_emphasis_alpha, high_pass_filter_order):
+def apply_voice_enchancement_filter(pre_emphasis_alpha, high_pass_filter_order):
+
+    samples, sample_rate = get_samples_and_sample_rate("static//audio//output.wav")
 
     samples = apply_pre_emphasis_filter(samples, pre_emphasis_alpha)
     samples = apply_bandpass_filter(high_pass_filter_order, samples, sample_rate, [800, 6000])
 
-    return samples
+    # saves the audio to a new processed audio 
+    save_audio("static//audio//processsed_audio.wav", samples, sample_rate)
+
+    os.remove("static//audio//output.wav")
+    os.rename("static//audio//processsed_audio.wav", "static//audio//output.wav")
