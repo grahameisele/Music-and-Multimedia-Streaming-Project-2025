@@ -141,9 +141,6 @@ def applyfilters():
             if(preemphasisAlpha == "error" or highPassFilter == "error"):
                 return jsonify(
                 message="Error, one of the values entered for the voice enhancement filter are invalid or empty.")  
-                
-
-    """
     
     # check that the output file is readable
     while(not isfile("static//videos//output.mp4") or not access("static//videos//output.mp4", R_OK)):
@@ -153,16 +150,11 @@ def applyfilters():
     while(not isfile("static//audio//output.wav") or not access("static//audio//output.wav", R_OK)):
         print("waiting for audio file to be readable")
     
-    if not at_least_one_video_filter:
-        os
-
     # combine the audio with filters applied with the video that has the filters appleid
     util.combine_audio_with_video()
 
     global filters_applied
     filters_applied = True
-    
-    """
     
     return jsonify(
         message="Filters Applied Sucessfully",
