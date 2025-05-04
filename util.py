@@ -143,6 +143,50 @@ def parse_gain_compressor_filter(gain_compressor_filter):
 
     return gain_compressor_threshold, limiter_threshold
 
+# Purpose: to parse the voice enhancement filter in the html webpage
+#
+# params
+# voice_enhancement_filter: the unparsed voice enhancement filter
+#
+# returns
+# a Pre-emphasis alpha value and a High pass filter order value
+
+def parse_voice_enhancement_filter(voice_enhancement_filter):
+    
+    # ex unparsed filter
+    # gainCompressor: voiceEnhancement: preemphasisAlpha=3, highPassFilter=2,
+
+    # get the preemphasisAlpha value
+    
+    first_equal_sign_index = voice_enhancement_filter.find("=")
+    first_comma_index = voice_enhancement_filter.find(",")
+
+    preemphasisAlpha = voice_enhancement_filter[first_equal_sign_index + 1 : first_comma_index]
+
+    # try to convert preemphasisAlpha to integer from string
+    try:
+        preemphasisAlpha = int(preemphasisAlpha) 
+    except ValueError:
+        print("Error parsing gain preemphasis alpha")
+    
+    # get the highPassFilter value
+
+    highPassFilter_filter = voice_enhancement_filter[first_comma_index + 1:]
+
+    highPassFilter_first_equal_index = highPassFilter_filter.find("=")
+    highPassFilter_first_comma_index = highPassFilter_filter.find(",")
+
+    highPassFilter = highPassFilter_filter[highPassFilter_first_equal_index + 1 : highPassFilter_first_comma_index]
+
+     # try to convert gain limiter threshold to integer from string
+    try:
+        highPassFilter = int(highPassFilter) 
+    except ValueError:
+        print("Error parsing limiter threshold")
+        return "error", "error"
+
+    return preemphasisAlpha, highPassFilter
+
 # Purpose 
 # 
 # extracts wav audio from the uploaded user video

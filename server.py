@@ -134,6 +134,16 @@ def applyfilters():
                # apply the gain compression with the user provided variables
                audio.apply_gain_compression(compressor_threshold, limiter_threshold)
 
+        if('voiceEnhancement' in filter):
+            preemphasisAlpha, highPassFilter = util.parse_voice_enhancement_filter(filter)
+
+            # check if the filter is valid
+            if(preemphasisAlpha == "error" or highPassFilter == "error"):
+                return jsonify(
+                message="Error, one of the values entered for the voice enhancement filter are invalid or empty.")  
+                
+
+    """
     
     # check that the output file is readable
     while(not isfile("static//videos//output.mp4") or not access("static//videos//output.mp4", R_OK)):
@@ -151,10 +161,13 @@ def applyfilters():
 
     global filters_applied
     filters_applied = True
-
+    
+    """
+    
     return jsonify(
         message="Filters Applied Sucessfully",
     )
+
 
 # api call / route for starting to stream the video
 @app.route("/startstreaming", methods=['GET'])

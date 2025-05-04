@@ -236,8 +236,6 @@
 
             const getProp = (prop_name) =>
             {
-                const propValue = document.getElementById(prop_name).value;
-                console.log(`Getting prop for ${prop_name}: ${propValue}`);
                 return { 
                     name: prop_name,
                     value: document.getElementById(prop_name).value 
@@ -263,10 +261,8 @@
             const addAudioFilter = () => {
                 const audioFilterSelect = document.getElementById("audioFilter");
                 const selectedAudioFilter = audioFilterSelect.value;
-                console.log("selected Audio Filter Value:" + selectedAudioFilter)
                 const filterConfig = { name: selectedAudioFilter, props: [] };
                 if (selectedAudioFilter === "gainCompressor") {
-                    console.log("adding gain Compressor Audio filter.")
                     filterConfig.props.push(getProp("gainCompressorThreshold"), getProp("limiterThreshold"));
                 } else if (selectedAudioFilter === "voiceEnhancement") {
                     filterConfig.props.push(getProp("preemphasisAlpha"), getProp("highPassFilter"));
