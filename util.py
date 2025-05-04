@@ -216,18 +216,19 @@ def extract_audio_from_video():
 # Purpose
 #
 # to combine audio located in the audio folder with the user uploaded video applied with filters
-def combine_audio_with_video():
-
-    # path of the video to combine with
-    video_file_path = "static//videos//output.mp4"
+#
+# Params
+# video_to_combine_audio_with_path: path of the video to combine with
+#
+def combine_audio_with_video(video_to_combine_audio_with_path):
 
     # checks if an uploaded video file already exists
-    if(os.path.exists(video_file_path)) <= 0:
+    if(os.path.exists(video_to_combine_audio_with_path)) <= 0:
         print("User uploaded video to extract audio from does not exist")
         return False
     
     # ffmpeg command for combining video with filters with audio with filters
-    ffmpeg_command = ["ffmpeg", "-y", "-i", video_file_path, "-i", "static//audio//output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "static//videos//new_output.mp4"]
+    ffmpeg_command = ["ffmpeg", "-y", "-i", video_to_combine_audio_with_path, "-i", "static//audio//output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", "static//videos//new_output.mp4"]
 
     subprocess.call(ffmpeg_command)
 

@@ -103,10 +103,13 @@ def applyfilters():
     # iterates over the list of filters and applies them
     for filter in filters:
         if('grayscale:' in filter):
+            at_least_one_video_filter = True
             video.greyScaleVideo()
         if('colorinvert:' in filter):
+            at_least_one_video_filter = True
             video.invertVideo()
         if('frameInterpolate:' in filter):
+            at_least_one_video_filter = True
             fps_value = util.parse_fps_filter(filter)
 
             if(fps_value <= 1):
@@ -116,6 +119,7 @@ def applyfilters():
             elif(fps_value >= 1):
                 video.fps_interpolate(fps_value)
         if('upscale:' in filter):
+            at_least_one_video_filter = True
             width, height = util.parse_upscale_filter(filter)
             
             if(not video.upscale_video(width, height)):
@@ -149,9 +153,16 @@ def applyfilters():
     # check that the output audio is readable
     while(not isfile("static//audio//output.wav") or not access("static//audio//output.wav", R_OK)):
         print("waiting for audio file to be readable")
+
+    # the path of which to combine the modified video and modified audio
+    video_to_combine_audio_with_path = "static//videos//output.mp4"
+
+    # if there is no video filters, just combined the modified audio with the original video
+    if not at_least_one_video_filter:
+        video_to_combine_audio_with_path = "static//videos//video.mp4"
     
     # combine the audio with filters applied with the video that has the filters appleid
-    util.combine_audio_with_video()
+    util.combine_audio_with_video(video_to_combine_audio_with_path)
 
     global filters_applied
     filters_applied = True
