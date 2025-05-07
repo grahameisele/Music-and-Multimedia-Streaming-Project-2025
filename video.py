@@ -86,7 +86,7 @@ def upscale_video(width, height):
     
     # calls ffmpeg to scale a video to certain width and height
     ffmpeg_command = ["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"scale={width}:{height}", "static/videos/output.mp4"]
-
+    
     util.apply_ffmpeg_video_filter(ffmpeg_command)
 
     return True

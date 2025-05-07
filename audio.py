@@ -1,9 +1,8 @@
+import os
+import math
 import numpy as np
 import scipy.io.wavfile as wav
-from scipy.signal import butter
-import math
-from scipy.signal import lfilter
-import os
+from scipy.signal import lfilter, wiener, butter
 
 # Purpose
 # reads in an audio file
@@ -218,3 +217,19 @@ def apply_voice_enchancement_filter(pre_emphasis_alpha, high_pass_filter_order):
 
     os.remove("static//audio//output.wav")
     os.rename("static//audio//processsed_audio.wav", "static//audio//output.wav")
+
+
+# Purpose
+#
+# apply a  weiner filter to audio samples
+#
+# returns
+#  
+# the audio samples with the wiener filter applied
+#
+
+def apply_wiener_filter(samples):
+
+    samples = wiener(samples)
+
+    return samples.astype(np.int16)
