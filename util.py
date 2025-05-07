@@ -99,154 +99,31 @@ def apply_ffmpeg_video_filter(ffmpeg_command):
         subprocess.call(ffmpeg_command) 
 
 
-# purpose
-# to parse the gain compresor filter provided by the user
-#
-# params
-# gain_compressor_filter: the unparsed gain_compressor_filter found in the html element
-#
-# returns
-# the parsed gain_compressor_filter
-
-def parse_gain_compressor_filter(gain_compressor_filter):
-
-    # ex unparsed filter
-    # gainCompressor: gainCompressorThreshold=-1, limiterThreshold=0,
-
-    # get the compresor threshold
-    
-    first_equal_sign_index = gain_compressor_filter.find("=")
-    first_comma_index = gain_compressor_filter.find(",")
-
-    gain_compressor_threshold = gain_compressor_filter[first_equal_sign_index + 1 : first_comma_index]
-
-    # try to convert gain compressor threshold to integer from string
-    try:
-        gain_compressor_threshold = int(gain_compressor_threshold) 
-    except ValueError:
-        print("Error parsing gain compressor threshold")
-    
-    # get the limiter threshold
-
-    limiter_threshold_filter = gain_compressor_filter[first_comma_index + 1:]
-
-    limiter_threshold_first_equal_index = limiter_threshold_filter.find("=")
-    limiter_threshold_first_comma_index = limiter_threshold_filter.find(",")
-
-    limiter_threshold = limiter_threshold_filter[limiter_threshold_first_equal_index + 1 : limiter_threshold_first_comma_index]
-
-     # try to convert gain limiter threshold to integer from string
-    try:
-        limiter_threshold = int(limiter_threshold) 
-    except ValueError:
-        print("Error parsing limiter threshold")
-
-    return gain_compressor_threshold, limiter_threshold
-
-# Purpose: to parse the voice enhancement filter in the html webpage
-#
-# params
-# voice_enhancement_filter: the unparsed voice enhancement filter
-#
-# returns
-# a Pre-emphasis alpha value and a High pass filter order value
-
-def parse_voice_enhancement_filter(voice_enhancement_filter):
-    
-    # ex unparsed filter
-    # gainCompressor: voiceEnhancement: preemphasisAlpha=3, highPassFilter=2,
-
-    # get the preemphasisAlpha value
-    
-    first_equal_sign_index = voice_enhancement_filter.find("=")
-    first_comma_index = voice_enhancement_filter.find(",")
-
-    preemphasisAlpha = voice_enhancement_filter[first_equal_sign_index + 1 : first_comma_index]
-
-    # try to convert preemphasisAlpha to integer from string
-    try:
-        print("Pre-emphasis alpha: ", preemphasisAlpha)
-        preemphasisAlpha = float(preemphasisAlpha) 
-    except ValueError:
-        print("Error parsing preemphasis alpha")
-    
-    # get the highPassFilter value
-
-    highPassFilter_filter = voice_enhancement_filter[first_comma_index + 1:]
-
-    highPassFilter_first_equal_index = highPassFilter_filter.find("=")
-    highPassFilter_first_comma_index = highPassFilter_filter.find(",")
-
-    highPassFilter = highPassFilter_filter[highPassFilter_first_equal_index + 1 : highPassFilter_first_comma_index]
-
-     # try to convert gain limiter threshold to integer from string
-    try:
-        highPassFilter = int(highPassFilter) 
-    except ValueError:
-        print("Error parsing limiter threshold")
-        return "error", "error"
-
-    return preemphasisAlpha, highPassFilter
-
-# Purpose
-#
-# parses raw denoise delay filter
-#
-# returns the parsed parameters passed by the user
-# 
-
-def parse_denoise_delay_filter(denoise_delay_filter):
+# parse any audio filter from the given filter
+def parse_audio_filter(filter):
 
     parameters = []
     
-    first_equal_sign_index = denoise_delay_filter.find("=")
-    first_comma_index = denoise_delay_filter.find(",")
+    first_equal_sign_index = filter.find("=")
+    first_comma_index = filter.find(",")
 
 
     while(first_equal_sign_index > 0):
 
-        current_param = denoise_delay_filter[first_equal_sign_index + 1 : first_comma_index]
+        current_param = filter[first_equal_sign_index + 1 : first_comma_index]
         
         current_param = int(current_param)
 
         parameters.append(current_param)
 
-        denoise_delay_filter = denoise_delay_filter[first_comma_index + 1:]        
+        filter = filter[first_comma_index + 1:]        
         
-        first_equal_sign_index = denoise_delay_filter.find("=")
-        first_comma_index = denoise_delay_filter.find(",")
+        first_equal_sign_index = filter.find("=")
+        first_comma_index = filter.find(",")
 
     return parameters
 
-# Purpose
-#
-# parses phone-like filtering filter
-#
-# returns the parsed parameters passed by the user
-# 
 
-def parse_phone_filter(denoise_delay_filter):
-
-    parameters = []
-    
-    first_equal_sign_index = denoise_delay_filter.find("=")
-    first_comma_index = denoise_delay_filter.find(",")
-
-
-    while(first_equal_sign_index > 0):
-
-        current_param = denoise_delay_filter[first_equal_sign_index + 1 : first_comma_index]
-        
-        current_param = int(current_param)
-
-        parameters.append(current_param)
-
-        denoise_delay_filter = denoise_delay_filter[first_comma_index + 1:]        
-        
-        first_equal_sign_index = denoise_delay_filter.find("=")
-        first_comma_index = denoise_delay_filter.find(",")
-
-    return parameters
 
 # Purpose 
 # 

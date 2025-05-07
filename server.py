@@ -127,7 +127,10 @@ def applyfilters():
                 message="Error, width or height are less than 1. Both must be greater than or equal to one")    
         
         if('gainCompressor' in filter):
-            compressor_threshold, limiter_threshold = util.parse_gain_compressor_filter(filter)
+            filter_params = util.parse_audio_filter(filter)
+
+            compressor_threshold = filter_params[0]
+            limiter_threshold = filter_params[1]
 
             # check that user has entered valid integers for both of the input fields
             if len(str(compressor_threshold)) == 0 or len(str(limiter_threshold)) == 0:
@@ -139,7 +142,11 @@ def applyfilters():
                audio.apply_gain_compression(compressor_threshold, limiter_threshold)
 
         if('voiceEnhancement' in filter):
-            preemphasisAlpha, highPassFilter = util.parse_voice_enhancement_filter(filter)
+
+            filter_params = util.parse_audio_filter(filter)
+
+            preemphasisAlpha = filter_params[0]
+            highPassFilter = filter_params[1]
 
             # check if the filter is valid
             if(preemphasisAlpha == "error" or highPassFilter == "error"):
