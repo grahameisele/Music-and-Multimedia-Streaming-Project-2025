@@ -17,9 +17,9 @@ def main():
 
     samples, sample_rate = audio.get_samples_and_sample_rate("input.wav")
 
-    samples = audio.apply_wiener_filter(samples)
+    new_samples = audio.apply_audio_delay(samples, sample_rate, 5000)
 
-    audio.save_audio("output.wav", samples, sample_rate)
+    audio.save_audio("output.wav", new_samples, sample_rate)
 
 # to tell that it is main program
 if __name__ == "__main__":
