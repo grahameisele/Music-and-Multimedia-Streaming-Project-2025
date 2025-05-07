@@ -156,6 +156,13 @@ def applyfilters():
             print("Param 1: ", params[0])
             print("Param 2: ", params[1])
             print("Param 3: ", params[2])
+        
+        if('phone' in filter):
+
+            params = util.parse_phone_filter(filter)
+
+            print("Param 1: ", params[0])
+            print("Param 2: ", params[1])
     
     # combine the audio with filters applied with the video that has the filters appleid
     util.combine_audio_with_video(at_least_one_video_filter)

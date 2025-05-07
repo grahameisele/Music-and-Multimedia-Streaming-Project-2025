@@ -218,6 +218,36 @@ def parse_denoise_delay_filter(denoise_delay_filter):
 
     return parameters
 
+# Purpose
+#
+# parses phone-like filtering filter
+#
+# returns the parsed parameters passed by the user
+# 
+
+def parse_phone_filter(denoise_delay_filter):
+
+    parameters = []
+    
+    first_equal_sign_index = denoise_delay_filter.find("=")
+    first_comma_index = denoise_delay_filter.find(",")
+
+
+    while(first_equal_sign_index > 0):
+
+        current_param = denoise_delay_filter[first_equal_sign_index + 1 : first_comma_index]
+        
+        current_param = int(current_param)
+
+        parameters.append(current_param)
+
+        denoise_delay_filter = denoise_delay_filter[first_comma_index + 1:]        
+        
+        first_equal_sign_index = denoise_delay_filter.find("=")
+        first_comma_index = denoise_delay_filter.find(",")
+
+    return parameters
+
 # Purpose 
 # 
 # extracts wav audio from the uploaded user video
