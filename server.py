@@ -148,6 +148,14 @@ def applyfilters():
             
             # applies the simple voice enhancement filter to the audio
             audio.apply_voice_enchancement_filter(preemphasisAlpha, highPassFilter)
+        
+        if('denoiseDelay' in filter):
+
+            params = util.parse_denoise_delay_filter(filter)
+
+            print("Param 1: ", params[0])
+            print("Param 2: ", params[1])
+            print("Param 3: ", params[2])
     
     # combine the audio with filters applied with the video that has the filters appleid
     util.combine_audio_with_video(at_least_one_video_filter)

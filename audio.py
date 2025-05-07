@@ -118,7 +118,6 @@ def apply_pre_emphasis_filter(samples, alpha=0):
     # creates an empty array of zeros with the length of the given audio samples
     y = np.zeros([num_samples, 2], dtype=np.int16)
     
-
     # applies the formula  y[n] = x[n] – α·x[n-1] given by the project documentation to the samples 
     for x in range(0, num_samples):
         
