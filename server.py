@@ -1,6 +1,6 @@
+from os.path import isfile
 from flask import Flask, render_template, request, flash, abort
 from flask import jsonify
-from os import access, R_OK
 import util
 import audio
 import os
@@ -13,6 +13,7 @@ app.secret_key = 'lWXE02osxb'
 
 filters = []
 filters_applied = False
+filters_configured = False
 
 # default home page 
 @app.route("/", methods=['GET', 'POST'])
@@ -67,14 +68,31 @@ def delete_video():
 # that lasts while the python server is running
 @app.route("/configurefilters", methods=['POST', 'GET'])
 def configure_filters():
+
+    global filters_configured
+    filters_configured = False
+    global configureFilters
+    filters_applied = False
+
+    # resets the filters
+    global filters
+    filters = []
+
     if request.method == "POST":
         # global word allows to be used outside of this function
-        global filters
+       
         # converts filters to python dictionary
         filters = request.form.getlist('filter')
 
+        if(len(filters)) <= 0:
+             return jsonify(
+                    message="There are no filters to configure, please configure them")  
+
         # checks if the user tries to use any filters that are not implemented
         for filter in filters:
+
+            print("Filter: ", filter)
+
             if('denoiseDelay' in filter):
                 return jsonify(
                     message="Error, the denoise delay is not implemented. Please remove it.")  
@@ -87,6 +105,8 @@ def configure_filters():
                 return jsonify(
                     message="Error, the car filter is not implemented. Please remove it.")
 
+       
+        filters_configured = True
         return jsonify(
         message="Filters configured",
         )
@@ -95,6 +115,14 @@ def configure_filters():
 # api call/route for applying the filters stored in the global variable
 @app.route("/applyfilters", methods=['GET'])
 def applyfilters():
+
+    if(isfile("static//videos/output.mp4")):
+        os.remove("static//videos/output.mp4")
+
+    if(not filters_configured):
+        return jsonify(
+        message="Please configure filters first",
+        ) 
 
     at_least_one_video_filter = False
 

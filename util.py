@@ -112,8 +112,12 @@ def parse_audio_filter(filter):
     while(first_equal_sign_index > 0):
 
         current_param = filter[first_equal_sign_index + 1 : first_comma_index]
-        
-        current_param = int(current_param)
+
+        # special case for float value for alpha in voice enhancement filter
+        if('voiceEnhancement' in filter):
+            current_param = float(current_param)
+        else:
+            current_param = int(current_param)
 
         parameters.append(current_param)
 
@@ -123,6 +127,8 @@ def parse_audio_filter(filter):
         first_comma_index = filter.find(",")
 
     return parameters
+
+
 
 
 
@@ -172,14 +178,17 @@ def combine_audio_with_video(at_least_one_video_filter):
         print("No video filters")
         video_to_combine_audio_with_path = "static//videos//video.mp4"
         output_video_path =  "static//videos//output.mp4"
+    else:
+        print("There is a video filter")
 
     # ffmpeg command for combining video with filters with audio with filters
     ffmpeg_command = ["ffmpeg", "-y", "-i", video_to_combine_audio_with_path, "-i", "static//audio//output.wav", "-c:v", "copy", "-map", "0:v:0", "-map", "1:a:0", output_video_path]
 
     subprocess.call(ffmpeg_command)
 
+    
     # if there is already input file, delete in and make the new combined output file the new output
     if(isfile("static//videos/output.mp4") and isfile("static//videos/new_output.mp4")):
         os.remove("static//videos/output.mp4")
         os.rename("static//videos/new_output.mp4", "static//videos/output.mp4")
-
+    

@@ -219,6 +219,7 @@
                 const divNode = document.getElementById("filtersList");
                 if (filterList.length === 0) {
                     divNodeContainer.style.display = "none";
+                    divNode.innerHTML = ""; // Ensure we clear the content
                 } else {
                     divNodeContainer.style.display = "block";
                     divNode.innerHTML = "";
@@ -244,6 +245,8 @@
             const clean = () => {
                 filterList = [];
                 refreshFiltersList();
+
+                document.getElementById("filtersList").innerHTML = "";
             };
             const addVideoFilter = () => {
                 const videoFilterSelect = document.getElementById("videoFilter");
@@ -274,7 +277,6 @@
                     filterConfig.props.push(getProp("phoneFilterOrder"), getProp("phoneSideGain"));
                 }
                 
-                console.log("Props being pushed:", filterConfig.props);
                 filterList.push(filterConfig);
                 refreshFiltersList();
             };
@@ -369,12 +371,23 @@
             };
             const configureFilters = async () => {
                 // use the variable filterList
-
+                
                 const formData = new FormData();
                 const filters = document.getElementById("filtersList"); 
-                for (const child of filters.children) 
+
+                if(filters.length <= 0)
                 {
+                    alert("There are 0 filters to configure");
+                    return;
+                }
+                else
+
+
+                for (const child of filters.children) 
+                {   
+                  
                     var currentFilterText = child.innerText;
+                    console.log("Current Filter " + currentFilterText);
                     formData.append("filter", currentFilterText)
                 }
 
@@ -423,8 +436,7 @@
                     //makes video container invisible first
                     videoContainer.style = "";
 
-                    videoElements[0].src = "http://localhost//static//videos//output.mp4";
-                    videoElements[0].load();
+                    videoElements[0].src = "/static/videos/output.mp4?_=" + new Date().getTime();
                     videoElements[0].load();
 
                     //makes video container visible
