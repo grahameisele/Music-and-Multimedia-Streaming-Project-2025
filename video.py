@@ -58,7 +58,7 @@ def fps_interpolate(fps):
         return False
 
     # ffmpeg command for interpolating the fps of a video
-    ffmpeg_command = ["ffmpeg", "-i", "static/videos/video.mp4", "-filter:v", f"fps={fps}", "static/videos/output.mp4"]
+    ffmpeg_command = ["ffmpeg", "-y", "-i", "static/videos/video.mp4", "-filter:v", f"fps={fps}", "static/videos/output.mp4"]
     
     util.apply_ffmpeg_video_filter(ffmpeg_command)
 

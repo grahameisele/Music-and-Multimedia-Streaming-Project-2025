@@ -218,37 +218,3 @@ def apply_voice_enchancement_filter(pre_emphasis_alpha, high_pass_filter_order):
     os.remove("static//audio//output.wav")
     os.rename("static//audio//processsed_audio.wav", "static//audio//output.wav")
 
-
-# Purpose
-#
-# apply a  weiner filter to audio samples
-#
-# returns
-#  
-# the audio samples with the wiener filter applied
-#
-
-def apply_wiener_filter(samples):
-
-    samples = wiener(samples)
-
-    return samples.astype(np.int16)
-
-def apply_audio_delay(samples, sample_rate, delay):
-
-    num_samples = len(samples)
-
-    delayed_samples = samples.copy()
-
-    # converts seocnds to milliseconds
-    delay = delay / 1000.0
-
-    # shifts over samples to delay
-    sample_start = int(sample_rate * delay)
-    num_samples_not_delayed = num_samples - sample_start
-    delayed_samples[sample_start : num_samples] = samples[0 : num_samples_not_delayed]
-    delayed_samples[0 : sample_start] = 0
-    
-    return (samples + delayed_samples)
-
-

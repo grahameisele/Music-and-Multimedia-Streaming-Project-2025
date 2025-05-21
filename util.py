@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+from os.path import isfile
 # module with utility functions
 
 # Purpose
@@ -177,6 +178,8 @@ def combine_audio_with_video(at_least_one_video_filter):
 
     subprocess.call(ffmpeg_command)
 
-    os.remove("static//videos/output.mp4")
-    os.rename("static//videos/new_output.mp4", "static//videos/output.mp4")
+    # if there is already input file, delete in and make the new combined output file the new output
+    if(isfile("static//videos/output.mp4") and isfile("static//videos/new_output.mp4")):
+        os.remove("static//videos/output.mp4")
+        os.rename("static//videos/new_output.mp4", "static//videos/output.mp4")
 

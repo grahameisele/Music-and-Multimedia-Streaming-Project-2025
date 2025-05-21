@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, flash, abort
 from flask import jsonify
 from os import access, R_OK
-from os.path import isfile
 import util
 import audio
 import os
@@ -73,6 +72,20 @@ def configure_filters():
         global filters
         # converts filters to python dictionary
         filters = request.form.getlist('filter')
+
+        # checks if the user tries to use any filters that are not implemented
+        for filter in filters:
+            if('denoiseDelay' in filter):
+                return jsonify(
+                    message="Error, the denoise delay is not implemented. Please remove it.")  
+            
+            if('phone' in filter):
+                return jsonify(
+                    message="Error, the phone filter is not implemented. Please remove it.")  
+
+            if('car' in filter):
+                return jsonify(
+                    message="Error, the car filter is not implemented. Please remove it.")
 
         return jsonify(
         message="Filters configured",
@@ -155,21 +168,6 @@ def applyfilters():
             
             # applies the simple voice enhancement filter to the audio
             audio.apply_voice_enchancement_filter(preemphasisAlpha, highPassFilter)
-        
-        if('denoiseDelay' in filter):
-
-            params = util.parse_denoise_delay_filter(filter)
-
-            print("Param 1: ", params[0])
-            print("Param 2: ", params[1])
-            print("Param 3: ", params[2])
-        
-        if('phone' in filter):
-
-            params = util.parse_phone_filter(filter)
-
-            print("Param 1: ", params[0])
-            print("Param 2: ", params[1])
     
     # combine the audio with filters applied with the video that has the filters appleid
     util.combine_audio_with_video(at_least_one_video_filter)
